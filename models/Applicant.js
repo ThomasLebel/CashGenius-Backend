@@ -5,7 +5,7 @@ const applicantSchema = mongoose.Schema({
     lastname : String,
     email : String,
     phone : String,
-    referal : String,
+    sponsorship : String,
     createdAt : {type: Date, default: Date.now}
 
 });

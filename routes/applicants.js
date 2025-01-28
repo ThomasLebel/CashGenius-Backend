@@ -28,7 +28,7 @@ router.post("/signup", async (req, res) => {
       return;
     }
 
-    const { firstname, lastname, email, phone, referal } = req.body;
+    const { firstname, lastname, email, phone, sponsorship } = req.body;
     const emailAlreadyExist = await Applicant.findOne({ email: email });
 
     if (emailAlreadyExist) {
@@ -70,12 +70,12 @@ router.post("/signup", async (req, res) => {
         .replace("{{lastname}}", lastname)
         .replace("{{email}}", email)
         .replace("{{phone}}", phone)
-        .replace("{{referal}}", referal)
+        .replace("{{referal}}", sponsorship)
 
 
       const notificationMailOption = {
         from: "Cash Genius contact@cash-genius.com",
-        to: email,
+        to: process.env.GMAIL_MAIL,
         subject: "Nouvelle inscription au Genius Programme",
         html: htmlNotificationContent,
       };
