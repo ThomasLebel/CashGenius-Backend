@@ -7,8 +7,8 @@ const fs = require("fs");
 const path = require("path");
 
 // Récupérer le contenu du template html
-const htmlUserPath = path.resolve("templates", "RegistrationConfirmation.html")
-const htmlNotificationPath = path.resolve("templates", "RegistrationNotification.html")
+const htmlUserPath = path.resolve("public/templates/RegistrationConfirmation.html")
+const htmlNotificationPath = path.resolve("public/templates/RegistrationNotification.html")
 
 router.post("/signup", async (req, res) => {
   try {
