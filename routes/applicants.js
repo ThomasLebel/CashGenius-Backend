@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const { checkBody } = require("../modules/checkBody");
 const Applicant = require("../models/Applicant");
+const User = require("../models/User")
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
@@ -12,7 +13,6 @@ const htmlNotificationPath = path.resolve("public/templates/RegistrationNotifica
 
 router.post("/signup", async (req, res) => {
   try {
-    console.log(req.body);
     if (!checkBody(req.body, ["firstname", "lastname", "email"])) {
       res.status(400).json({ result: false, error: "Missing or empty fields" });
       return;
@@ -26,7 +26,20 @@ router.post("/signup", async (req, res) => {
       return;
     } else {
       const applicantToAdd = new Applicant(req.body);
-      const applicantAdded = await applicantToAdd.save();
+      
+
+      if (req.body.sponsorship){
+        const affiliate = await User.findOne({referralCode : req.body.sponsorship})
+        if (affiliate){
+          affiliate.referredUsers.push({referredUserInfos : applicantToAdd._id})
+          await affiliate.save()
+          const applicantAdded = await applicantToAdd.save();
+        } else {
+          return res.status(409).json({result: false, error: "Ce code de parrainage n'existe pas"})
+        }
+      } else {
+        const applicantAdded = await applicantToAdd.save()
+      }
 
       const transporter = nodemailer.createTransport({
         service: "gmail",

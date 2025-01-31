@@ -6,6 +6,8 @@ const applicantSchema = mongoose.Schema({
     email : String,
     phone : String,
     sponsorship : String,
+    status: {type: String, default: 'En attente'},
+    commission : {type: Number, default: 0},
     createdAt : {type: Date, default: Date.now}
 
 });
