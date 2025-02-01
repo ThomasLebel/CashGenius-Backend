@@ -26,13 +26,17 @@ router.post("/signup", async (req, res) => {
       return;
     } else {
       const applicantToAdd = new Applicant(req.body);
-      
+
+      let affiliateName = ""
 
       if (req.body.sponsorship){
         const affiliate = await User.findOne({referralCode : req.body.sponsorship})
         if (affiliate){
           affiliate.referredUsers.push({referredUserInfos : applicantToAdd._id})
           await affiliate.save()
+          affiliateName = `${affiliate.firstname} ${affiliate.lastname}`
+          console.log(affiliateName)
+          applicantToAdd.sponsorship = affiliate._id
           const applicantAdded = await applicantToAdd.save();
         } else {
           return res.status(409).json({result: false, error: "Ce code de parrainage n'existe pas"})
@@ -73,7 +77,7 @@ router.post("/signup", async (req, res) => {
         .replace("{{lastname}}", lastname)
         .replace("{{email}}", email)
         .replace("{{phone}}", phone)
-        .replace("{{referal}}", sponsorship)
+        .replace("{{sponsorship}}", affiliateName)
 
 
       const notificationMailOption = {
